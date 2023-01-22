@@ -36,20 +36,11 @@ import { MdCheck, MdDelete } from 'react-icons/md'
 import NewSubTaskModal from '../../components/NewSubTaskModal'
 import { NewTask, User } from '../../types'
 import { trpc } from '../../utils/trpc'
-
-interface Props {
-  handleNewSubTask: (data: User) => void
-  uid: string
-  firstName: string
-  lastName: string
-  alias: string
-  password: string
-  auth: string
-}
+import { useAuthContext } from '../../context/AuthContext'
 
 const task = () => {
   const utils = trpc.useContext()
-
+  const { user } = useAuthContext()
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   const path = useRouter()
@@ -80,6 +71,8 @@ const task = () => {
           isOpen={isOpen}
           onClose={onClose}
           onSubmit={handleCreateJuiceRequest}
+          UserId={getTaskById?.assignedToId.toString()}
+          TaskId={data}
         />
         <CardHeader>
           <Flex

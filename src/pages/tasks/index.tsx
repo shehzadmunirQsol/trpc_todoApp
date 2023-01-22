@@ -84,12 +84,12 @@ function Index() {
   const deleteTask = trpc.useMutation('tasks.deleteTask')
   const updateTask = trpc.useMutation('tasks.updateTask')
   const createTaskRequest = trpc.useMutation('tasks.createTask')
-  const [taskRequests, setTaskRequests] = useState([])
+  const [taskRequests, setTaskRequests] = useState<Task | undefined>()
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   // this updates the UI when the userQuery data is first loaded.
   useEffect(() => {
-    if (getTasks.isFetching) setTaskRequests([])
+    if (getTasks.isFetching) setTaskRequests(undefined)
     if (getTasks.isFetched) setTaskRequests(getTasks?.data)
   }, [getTasks.data, getTasks.isFetched, getTasks.isFetching])
 

@@ -31,7 +31,7 @@ export const tasksRouter = createRouter()
   .query("getTaskById", {
     input: z.object({
       
-      id: z.string(),
+      id: z.string().optional(),
      
 
     }),

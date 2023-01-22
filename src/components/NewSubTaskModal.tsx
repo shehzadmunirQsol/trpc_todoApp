@@ -45,11 +45,20 @@ const StyledSpanEnd = styled.div`
 
 interface Props {
   isOpen: boolean
+  UserId: string | undefined
+  TaskId: string | undefined
   onClose: () => void
   onSubmit: (data: NewTask) => void
 }
 
-export default function NewTaskModal({ isOpen, onClose, onSubmit }: Props) {
+export default function NewTaskModal({
+  isOpen,
+  onClose,
+  onSubmit,
+  UserId,
+  TaskId
+}: Props) {
+  console.log(UserId, TaskId)
   const { user } = useAuthContext()
   const [taskName, setTaskName] = useState('')
   const [taskDes, setTaskDes] = useState('')
