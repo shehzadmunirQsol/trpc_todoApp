@@ -1,0 +1,96 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["views"]
+}
+
+datasource db {
+  provider             = "mysql"
+  url                  = env("DATABASE_URL")
+  shadowDatabaseUrl    = env("SHADOW_URL")
+
+
+  referentialIntegrity = "prisma"
+}
+
+enum Auth {
+  user
+  admin
+  kitchen
+  bar
+}
+
+model User {
+  id        String  @id @default(cuid())
+  firstName String
+  lastName  String
+  alias     String?
+  password  String  @unique
+  auth      String  @default("user")
+  locked    Boolean @default(false)
+
+  @@unique([firstName, lastName, password])
+}
+
+model Task {
+  id           String    @id @default(cuid())
+  name         String
+  description  String
+  createdAt    DateTime  @default(now())
+  lastEdited   DateTime  @updatedAt
+  priority     Int
+  assignedToId String
+  createdBy    String
+  status       String
+  SubTask      SubTask[]
+}
+
+view task_vw {
+  id           String    @id @default(cuid())
+  name         String
+  description  String
+  createdAt    DateTime  @default(now())
+  lastEdited   DateTime  @updatedAt
+  priority     Int
+  assignedToId String
+  createdBy    String
+  status       String
+  AsigneeName  String
+}
+
+
+model SubTask {
+  id           String   @id @default(cuid())
+  task_id      String
+  name         String
+  description  String
+  createdAt    DateTime @default(now())
+  lastEdited   DateTime @updatedAt
+  priority     Int
+  assignedToId String
+  task_id1     Task     @relation(fields: [task_id], references: [id])
+  createdBy    String
+  status       String
+}
+
+
+model Day {
+  id             String   @id @default(cuid())
+  startingCovers Int
+  endingCovers   Int
+  date           DateTime @default(now())
+  totalSales     Int
+  totalTips      Int
+  weather        String
+  notes          String
+}
+
+model Priority {
+  id          String   @id @default(cuid())
+  name        String
+  description String
+  createdAt   DateTime @default(now())
+  lastEdited  DateTime @updatedAt
+}
