@@ -87,7 +87,6 @@ export default function LoginForm() {
     // loop through users array
     userQuery?.data?.forEach((user: User) => {
       if (password === user.password) {
-        console.log('password matched')
         matched = true
         clearInputs() // reset password input
         changeUser(user) // login user

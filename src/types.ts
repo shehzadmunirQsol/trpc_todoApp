@@ -33,6 +33,15 @@ export interface NewTask {
   status: string
   createdBy: string
 }
+export interface NewSubTask {
+  name: string
+  description: string
+  priority: number
+  assignedToId: string
+  status: string
+  createdBy: string
+  task_id :string
+}
 
 export interface Day {
   id: string

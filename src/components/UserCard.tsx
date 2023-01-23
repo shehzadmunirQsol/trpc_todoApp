@@ -1,10 +1,4 @@
-/*
-  [x] If the user clicks on Edit, a modal will pop up with a form to edit the user.
-    If the user clicks Save, the user will be updated in the database,
-    and the page will refresh.
 
-  []  Update User
-*/
 
 import React, { useRef } from 'react'
 import {

@@ -42,7 +42,10 @@ import { MdAutoDelete, MdCheck, MdDelete } from 'react-icons/md'
 import { useRouter } from 'next/router'
 import { IoMdEye } from 'react-icons/io'
 import Link from 'next/link'
+import SearchBar from '../../components/SearchBar'
 function TaskItem({ task }: any) {
+
+
   return (
     <Box
       flex="1"
@@ -75,16 +78,15 @@ function Index() {
       user_auth: user.auth
     }
   ])
-  console.log(getTasks.data)
   const getUsers = trpc.useQuery(['users.getUsers'])
-
+  const [search, setSearch] = useState<string>('')
   const HandleColorModeChange = useColorModeValue('gray.600', 'gray.400')
   const utils = trpc.useContext()
 
   const deleteTask = trpc.useMutation('tasks.deleteTask')
   const updateTask = trpc.useMutation('tasks.updateTask')
   const createTaskRequest = trpc.useMutation('tasks.createTask')
-  const [taskRequests, setTaskRequests] = useState<Task | undefined>()
+  const [taskRequests, setTaskRequests] = useState<any>()
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   // this updates the UI when the userQuery data is first loaded.
@@ -123,7 +125,22 @@ function Index() {
     },
     [createTaskRequest, utils]
   )
-  console.log(getUsers.data)
+
+  const liveSearch = () => {
+    return taskRequests?.filter((data:any) => {
+      const name = data.name.toLowerCase()
+      const description = data.description.toLowerCase()
+
+      const searchWords = search.toLowerCase().split(' ')
+      return searchWords.every(word => {
+        return (
+          name.includes(word) ||
+          description.includes(word)
+      
+        )
+      })
+    })
+  }
   if (!user.firstName) return <LoginForm />
   return (
     <Box maxW="container.lg">
@@ -144,9 +161,14 @@ function Index() {
           Add New Task
         </Button>
       </HStack>
+      <SearchBar
+          search={search}
+          setSearch={setSearch}
+          placeholder="Search by name, alias, or password"
+        />
 
       {getTasks.data &&
-        getTasks.data.map(task => {
+        liveSearch()?.map((task:any) => {
           return (
             <>
               <Flex
@@ -185,13 +207,16 @@ function Index() {
                     size="sm"
                   />
                 )}
-                <IconButton
+                {user.auth == 'admin' || task.createdBy == user.id ? (
+
+                  <IconButton
                   variant="ghost"
                   aria-label="more information"
                   icon={<MdDelete />}
                   size="sm"
                   onClick={() => handleDelete(task.id)}
-                />
+                  />
+                ):(<></>)}
                 {user.auth == 'admin' && task.status != 'Completed' ? (
                   <>
                     <Link href={`/tasks/${task.id}`}>

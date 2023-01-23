@@ -54,7 +54,6 @@ export const tasksRouter = createRouter()
 
     }),
     async resolve({ ctx, input }) {
-      console.log(input)
       await ctx.prisma.task.create({
         data: {
           name: input.name,
@@ -106,5 +105,83 @@ export const tasksRouter = createRouter()
       )
     }
   })
+  .mutation("createSubTask", {
+    input: z.object({
+      name: z.string(),
+      description: z.string(),
+      priority: z.number(),
+      assignedToId: z.string(),
+      status: z.string(),
+      task_id: z.string(),
+      createdBy: z.string()
 
+    }),
+    async resolve({ ctx, input }) {
+      await ctx.prisma.subTask.create({
+        data: {
+          name: input.name,
+          description: input.description,
+          priority: input.priority,
+          assignedToId: input.assignedToId,
+          status: input.status,
+          task_id: input.task_id,
+          createdBy: input.createdBy
+        },
+      })
+    }
+  })
+  .query("getSubTasksById", {
+    input: z.object({
+      
+      task_id: z.string().optional(),
+     
 
+    }),
+    async resolve({ ctx,input }) {
+        return await ctx.prisma.subTask.findMany({where: {
+          task_id:input.task_id
+        },});
+
+    }
+    
+  })
+  .mutation("updateSubTask", {
+    // validate input with Zod
+    input: z.object({
+      id: z.string(),
+      name: z.string(),
+      task_id: z.string(),
+      description: z.string(),
+      priority: z.number(),
+      assignedToId: z.string(),
+      status: z.string(),
+    }),
+    async resolve({ ctx, input }) {
+      await ctx.prisma.subTask.update({
+        where: {
+          id: input.id,
+        },
+        data: {
+          name: input.name,
+          description: input.description,
+          priority: input.priority,
+          task_id: input.task_id,
+          assignedToId: input.assignedToId,
+          status: 'Completed',
+        },
+      })
+    }
+  })
+  .mutation("deleteSubTask", {
+    input: z.object({
+      id: z.string(),
+    }),
+    async resolve({ ctx, input }) {
+      await ctx.prisma.subTask.delete({
+        where: {
+          id: input.id,
+        },
+      }
+      )
+    }
+  })

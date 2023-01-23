@@ -105,7 +105,6 @@ export default function NewTaskModal({ isOpen, onClose, onSubmit }: Props) {
     clearForm()
     onClose()
   }
-  console.log(taskStat, 'sdsss')
   if (!user.firstName) {
     return <LoginForm />
   }

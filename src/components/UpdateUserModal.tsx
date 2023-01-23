@@ -1,29 +1,4 @@
-/*
-    This is a modal that pops up when the user clicks 
-    on Update in a user's card.
 
-    This modal will contain a form to edit a user's information.
-
-    When the user clicks Update, we will query the database 
-    for the user's information and populate the form with it.
-
-    [] On submit: 
-        the data in the form will overwrite the user's data in the database,
-        and the page will refresh. Closing the modal.
-
-        [] Fix: I don't want the page to refresh. 
-        I just want the user's card to update.
-
-    [x] On close:
-    if the user has edited the data in the form, 
-        a confirmation modal to save changes will pop up. 
-            If the user clicks Yes, 
-                the modal will close and the edits will be lost.
-            If the user clicks No,
-                the modal will stay open.
-    if the user has not edited the form's data,
-        the modal will close.
-*/
 
 import React, { useEffect, useState } from 'react'
 import {
@@ -187,7 +162,7 @@ function UpdateUserModal({
                   value={newPassword}
                 />
                 <FormHelperText>
-                  Use the same password as their Toast POS login
+                  Use the Unique password
                 </FormHelperText>
               </FormControl>
               <FormControl isRequired as="fieldset">
@@ -197,39 +172,13 @@ function UpdateUserModal({
                     <Radio value="user" onChange={handleOptionChange}>
                       User
                     </Radio>
-                    <Radio value="bar" onChange={handleOptionChange}>
-                      Bar
-                    </Radio>
-                    <Radio value="kitchen" onChange={handleOptionChange}>
-                      Kitchen
-                    </Radio>
+                  
                     <Radio value="admin" onChange={handleOptionChange}>
                       Admin
                     </Radio>
                   </HStack>
                 </RadioGroup>
-                <FormHelperText>
-                  <Table variant="simple" size="sm">
-                    <Tbody>
-                      <Tr>
-                        <Td>User</Td>
-                        <Td>Can only view information</Td>
-                      </Tr>
-                      <Tr>
-                        <Td>Bar</Td>
-                        <Td>Can edit bar related information</Td>
-                      </Tr>
-                      <Tr>
-                        <Td>Kitchen</Td>
-                        <Td>Can edit kitchen related information</Td>
-                      </Tr>
-                      <Tr>
-                        <Td>Admin</Td>
-                        <Td>Can view and edit all information</Td>
-                      </Tr>
-                    </Tbody>
-                  </Table>
-                </FormHelperText>
+            
               </FormControl>
             </VStack>
           </ModalBody>

@@ -34,7 +34,7 @@ import {
 } from 'react-icons/bi'
 import { MdCheck, MdDelete } from 'react-icons/md'
 import NewSubTaskModal from '../../components/NewSubTaskModal'
-import { NewTask, User } from '../../types'
+import { NewSubTask, NewTask, User } from '../../types'
 import { trpc } from '../../utils/trpc'
 import { useAuthContext } from '../../context/AuthContext'
 
@@ -51,19 +51,50 @@ const task = () => {
       id: data
     }
   ])
-  const createTaskRequest = trpc.useMutation('tasks.createTask')
+  const getSubTasks = trpc.useQuery([
+    'tasks.getSubTasksById',
+    {
+      task_id: data
+    }
+  ])
+  const createTaskRequest = trpc.useMutation('tasks.createSubTask')
+  const updateSubTask = trpc.useMutation('tasks.updateSubTask')
+  const deleteSubTask = trpc.useMutation('tasks.deleteSubTask')
 
   const getTaskById = getTasks.data
   const handleCreateJuiceRequest = useCallback(
-    async (data: NewTask) => {
+    async (data: NewSubTask) => {
       await createTaskRequest.mutateAsync(data, {
         onSuccess: () => {
-          utils.invalidateQueries(['tasks.getTasks'])
+          utils.invalidateQueries(['tasks.getSubTasksById'])
         }
       })
     },
     [createTaskRequest, utils]
   )
+  // update sub task
+  const handleCheck = async (task: any) => {
+    await updateSubTask.mutateAsync(
+      { ...task },
+      {
+        onSuccess: () => {
+          utils.invalidateQueries(['tasks.getSubTasksById'])
+        }
+      }
+    )
+  }
+  // delete sub task
+  const handleDelete = async (id: any) => {
+    await deleteSubTask.mutateAsync(
+      { id: id },
+      {
+        onSuccess: () => {
+          utils.invalidateQueries(['tasks.getSubTasksById'])
+        }
+      }
+    )
+  }
+
   return (
     <>
       <Card>
@@ -87,6 +118,8 @@ const task = () => {
                 {getTaskById?.description}
               </Text>
             </Box>
+           
+
             <Button
               leftIcon={
                 getTaskById?.status == 'pending' ? <BiTaskX /> : <BiCheck />
@@ -97,6 +130,9 @@ const task = () => {
             >
               {getTaskById?.status}
             </Button>
+            
+            {
+              getTaskById?.status != 'Completed' &&
 
             <Button
               px={4}
@@ -108,13 +144,15 @@ const task = () => {
               fontSize={'sm'}
             >
               Add Sub Task
-            </Button>
+            </Button>}
           </Flex>
         </CardHeader>
 
         <CardBody>
           <Stack divider={<StackDivider />} spacing="4">
-            <Flex
+            {(getSubTasks != undefined ) ?( 
+              getSubTasks?.data?.map((ele,i)=>(
+                <Flex
               gap="2"
               py={2}
               alignItems="center"
@@ -122,52 +160,58 @@ const task = () => {
             >
               <Box w="80%">
                 <Heading size="xs" textTransform="uppercase">
-                  Summary
+                  {ele.name}
                 </Heading>
                 <Text pt="2" fontSize="sm">
-                  View a summary of all your clients over the last month.
+                  {ele.description}
                 </Text>
               </Box>
-              <IconButton
+              {ele.status !='Completed'?( <IconButton
                 variant="ghost"
                 aria-label="more information"
                 icon={<MdCheck />}
+                onClick={() => handleCheck(ele)}
+
                 size="sm"
-              />
+              />):(<Button
+                leftIcon={ <BiCheck />}
+                variant="outline"
+                colorScheme= 'green'
+                size="sm"
+              >
+                Completed
+              </Button>)}
               <IconButton
                 variant="ghost"
                 aria-label="more information"
                 icon={<MdDelete />}
+                onClick={() => handleDelete(ele.id)}
+
                 size="sm"
               />
             </Flex>
-            <Flex
+              ))
+              
+
+            ):(
+              <Flex
               gap="2"
               py={2}
               alignItems="center"
               justifyContent="space-between"
             >
               <Box w="80%">
-                <Heading size="xs" textTransform="uppercase">
-                  Summary
-                </Heading>
+              
                 <Text pt="2" fontSize="sm">
-                  View a summary of all your clients over the last month.
+                 No Data found
                 </Text>
               </Box>
-              <IconButton
-                variant="ghost"
-                aria-label="more information"
-                icon={<MdCheck />}
-                size="sm"
-              />
-              <IconButton
-                variant="ghost"
-                aria-label="more information"
-                icon={<MdDelete />}
-                size="md"
-              />
+
             </Flex>
+            ) 
+            }
+            
+
           </Stack>
         </CardBody>
       </Card>

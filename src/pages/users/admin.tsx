@@ -23,7 +23,8 @@ import {
   Table,
   Tbody,
   Td,
-  Tr
+  Tr,
+  SimpleGrid
 } from '@chakra-ui/react'
 import { FaUserPlus } from 'react-icons/fa'
 import { InfoOutlineIcon } from '@chakra-ui/icons'
@@ -148,97 +149,7 @@ export default function Index() {
           setSearch={setSearch}
           placeholder="Search by name, alias, or password"
         />
-        <FormControl pb={8} rounded="lg">
-          <Flex alignItems="center" pb="1">
-            <FormLabel as="legend">Filter by Authorization Level:</FormLabel>
-            <Popover
-              isOpen={isPopOverOpen}
-              onOpen={onPopOverOpen}
-              onClose={onPopOverClose}
-              placement="top-start"
-              orientation="horizontal"
-            >
-              <PopoverTrigger>
-                <IconButton
-                  aria-label="input password"
-                  position="relative"
-                  right="7px"
-                  bottom="4px"
-                  variant="ghost"
-                  size="sm"
-                  icon={<InfoOutlineIcon />}
-                />
-              </PopoverTrigger>
-              <PopoverContent>
-                <PopoverHeader fontWeight="semibold">
-                  Authorizations:
-                </PopoverHeader>
-                <PopoverCloseButton />
-                <PopoverBody>
-                  <Table variant="simple" size="sm">
-                    <Tbody>
-                      <Tr>
-                        <Td>User</Td>
-                        <Td>Can only view information</Td>
-                      </Tr>
-                      <Tr>
-                        <Td>Bar</Td>
-                        <Td>Can edit bar related information</Td>
-                      </Tr>
-                      <Tr>
-                        <Td>Kitchen</Td>
-                        <Td>Can edit kitchen related information</Td>
-                      </Tr>
-                      <Tr>
-                        <Td>Admin</Td>
-                        <Td>Can view and edit all information</Td>
-                      </Tr>
-                    </Tbody>
-                  </Table>
-                </PopoverBody>
-              </PopoverContent>
-            </Popover>
-          </Flex>
-          <RadioGroup defaultValue="all">
-            <HStack spacing="12px">
-              <Radio
-                value="all"
-                checked={authFilter === 'all'}
-                onChange={handleRadioButtonChange}
-              >
-                All
-              </Radio>
-              <Radio
-                value="user"
-                checked={authFilter === 'user'}
-                onChange={handleRadioButtonChange}
-              >
-                User
-              </Radio>
-              <Radio
-                value="bar"
-                checked={authFilter === 'bar'}
-                onChange={handleRadioButtonChange}
-              >
-                Bar
-              </Radio>
-              <Radio
-                value="kitchen"
-                checked={authFilter === 'kitchen'}
-                onChange={handleRadioButtonChange}
-              >
-                Kitchen
-              </Radio>
-              <Radio
-                value="admin"
-                checked={authFilter === 'admin'}
-                onChange={handleRadioButtonChange}
-              >
-                Admin
-              </Radio>
-            </HStack>
-          </RadioGroup>
-        </FormControl>
+       <SimpleGrid columns={2} spacing={10}>
         {getUsers.data &&
           liveSearch()?.map((user: any) => (
             <UserCard
@@ -251,8 +162,10 @@ export default function Index() {
               alias={user.alias}
               password={user.password}
               auth={user.auth}
-            />
-          ))}
+              />
+              ))}
+          
+              </SimpleGrid>
       </Stack>
     </>
   )

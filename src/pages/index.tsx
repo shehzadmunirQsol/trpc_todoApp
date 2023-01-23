@@ -1,8 +1,4 @@
-/* 
-  This is the homepage of the website.
-  It is the first page that users see when they open the website.
-  This will hold a few dashboard for 
-*/
+
 import { useState, useCallback } from 'react'
 
 import { Button, Flex, Heading, Text,useDisclosure } from '@chakra-ui/react'

@@ -27,7 +27,7 @@ import {
 import styled from '@emotion/styled'
 import { useAuthContext } from '../context/AuthContext'
 import LoginForm from './LoginForm'
-import type { NewJuiceRequest, NewTask } from '../types'
+import type { NewJuiceRequest, NewSubTask, NewTask } from '../types'
 import { useForm } from 'react-hook-form'
 import { MdArrowDropDown } from 'react-icons/md'
 import { trpc } from '../utils/trpc'
@@ -45,10 +45,10 @@ const StyledSpanEnd = styled.div`
 
 interface Props {
   isOpen: boolean
-  UserId: string | undefined
+  UserId: string | undefined 
   TaskId: string | undefined
   onClose: () => void
-  onSubmit: (data: NewTask) => void
+  onSubmit: (data: NewSubTask) => void
 }
 
 export default function NewTaskModal({
@@ -58,17 +58,16 @@ export default function NewTaskModal({
   UserId,
   TaskId
 }: Props) {
-  console.log(UserId, TaskId)
   const { user } = useAuthContext()
   const [taskName, setTaskName] = useState('')
   const [taskDes, setTaskDes] = useState('')
   const [taskStat, setTaskStat] = useState('pending')
-  const [taskAssign, setTaskAssign] = useState('')
+  const [taskAssign, setTaskAssign] = useState(UserId)
+  const [taskId, setTaskId] = useState(TaskId)
   const [notes, setNotes] = useState<string>('')
   const [isWriting, setIsWriting] = useState(false)
   // const [notes, setNotes] = useState('')
   const { register, handleSubmit } = useForm()
-  const getUsers = trpc.useQuery(['users.getUsers'])
 
   const HandleColorModeChange = (light: string, dark: string) => {
     return useColorModeValue(light, dark)
@@ -107,14 +106,14 @@ export default function NewTaskModal({
       description: taskDes,
       priority: 1,
       assignedToId:
-        user.auth == 'admin' && taskAssign != '' ? taskAssign : user.id,
+        user.auth == 'admin' && UserId != undefined ? UserId : user.id,
       status: taskStat,
+      task_id: TaskId ==  undefined ? '':TaskId,
       createdBy: user.id
     })
     clearForm()
     onClose()
   }
-  console.log(taskStat, 'sdsss')
   if (!user.firstName) {
     return <LoginForm />
   }
@@ -158,21 +157,7 @@ export default function NewTaskModal({
                 <option value="Completed">Completed</option>
               </Select>
             </FormControl>
-            {user.auth == 'admin' && (
-              <FormControl isRequired>
-                <FormLabel as="legend">Select User</FormLabel>
-                <Select
-                  icon={<MdArrowDropDown />}
-                  placeholder="Select User"
-                  onChange={e => setTaskAssign(e.target.value)}
-                >
-                  {getUsers.data &&
-                    getUsers.data.map(val => (
-                      <option value={val.id}>{val.firstName}</option>
-                    ))}
-                </Select>
-              </FormControl>
-            )}
+
             <FormControl>
               <Input
                 placeholder="Alias"

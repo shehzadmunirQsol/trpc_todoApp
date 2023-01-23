@@ -1,22 +1,4 @@
-/*
-    This is a modal that pops up when the user clicks on Add User.
-    This modal will contain a form to add a user.
 
-    [x] On submit: 
-        the user will be added to the database,
-        and trpc will refetch and load users.
-        The modal closes.
-
-    [x] On close:
-    if the user has entered data into the form, 
-        a confirmation modal will pop up. 
-            If the user clicks Yes, 
-                the modal will close and the data will be lost.
-            If the user clicks No,
-                the modal will stay open.
-    if the user has not entered data into the form,
-        the modal will close.
-*/
 
 import React, { useEffect } from 'react'
 import {
