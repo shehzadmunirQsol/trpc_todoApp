@@ -3,7 +3,11 @@
 
 # Create T3 App
 
-This is an app bootstrapped according to the [init.tips](https://init.tips) stack, also known as the T3-Stack.
+[Shehzad Munir](https://shehzad-munir.netlify.app/)
+
+This is an app bootstrapped according to the T3 stack, also known as the T3-Stack.
+
+
 
 Tasks:
 
