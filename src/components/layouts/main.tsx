@@ -1,4 +1,3 @@
-
 import Logo from '../Logo'
 import NextLink from 'next/link'
 import ThemeToggleButton from '../theme-toggle-button'
@@ -193,14 +192,43 @@ const Main = ({ children, router }: MainProps) => {
         color="gray.600"
         aria-label="Main Navigation"
       >
-        <NavItem icon={MdHome} path={path} href="/" >
+        <NavItem icon={MdHome} path={path} href="/">
           Home
         </NavItem>
         <SidebarHeading>Information</SidebarHeading>
-        <NavItem icon={BsCheck2Square} path={path} href={`/tasks?data=${'pending'}`}>
+        <NavItem
+          icon={BsCheck2Square}
+          path={path}
+          href={`/products?data=${'pending'}`}
+        >
+          POS
+        </NavItem>
+        <NavItem
+          icon={BsCheck2Square}
+          path={path}
+          href={`/products?data=${'pending'}`}
+        >
+          Products
+        </NavItem>
+        <NavItem
+          icon={BsCheck2Square}
+          path={path}
+          href={`/categories?data=${'pending'}`}
+        >
+          Categories
+        </NavItem>
+        <NavItem
+          icon={BsCheck2Square}
+          path={path}
+          href={`/tasks?data=${'pending'}`}
+        >
           Pending Tasks
         </NavItem>
-        <NavItem icon={BsCheck2Square} path={path} href={`/tasks?data=${'completed'}`} >
+        <NavItem
+          icon={BsCheck2Square}
+          path={path}
+          href={`/tasks?data=${'completed'}`}
+        >
           Completed Tasks
         </NavItem>
         <AdminAuthOnly user={user}>
@@ -208,11 +236,8 @@ const Main = ({ children, router }: MainProps) => {
           <NavItem icon={FaUsers} path={path} href="/users/admin">
             Users
           </NavItem>
-         
         </AdminAuthOnly>
-        
-       
-       
+
         <SidebarHeading>{`Settings: ${
           user.alias ? user.alias : user.firstName
         }`}</SidebarHeading>
