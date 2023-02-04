@@ -24,7 +24,21 @@ export interface Task {
   status: string
   createdBy: string
 }
-
+export interface Categories {
+  id: string
+  name: string
+  description: string
+  status: string
+  created_by: string
+  created_at: string
+  updated_at: string
+}
+export interface NewCategory {
+  name: string
+  description: string
+  status: string
+  created_by: string
+}
 export interface NewTask {
   name: string
   description: string
@@ -40,7 +54,7 @@ export interface NewSubTask {
   assignedToId: string
   status: string
   createdBy: string
-  task_id :string
+  task_id: string
 }
 
 export interface Day {
