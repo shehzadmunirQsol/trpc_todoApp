@@ -26,18 +26,16 @@ export interface Task {
 }
 export interface Categories {
   id: string
-  name: string
-  description: string
-  status: string
-  created_by: string
-  created_at: string
-  updated_at: string
+  category_name: string
+  category_desc: string
+  status: number
+  createdBy: string
 }
 export interface NewCategory {
-  name: string
-  description: string
-  status: string
-  created_by: string
+  category_name: string
+  category_desc: string
+  status: number
+  createdBy: string
 }
 export interface NewTask {
   name: string

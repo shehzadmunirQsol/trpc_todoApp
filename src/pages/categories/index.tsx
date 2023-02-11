@@ -1,5 +1,7 @@
 export default Index
 import React, { useCallback, useEffect, useState } from 'react'
+import { Table, useAsyncList } from '@nextui-org/react'
+
 import LoginForm from '../../components/LoginForm'
 import { useAuthContext } from '../../context/AuthContext'
 import { trpc } from '../../utils/trpc'
@@ -35,7 +37,9 @@ import type {
   JuiceRequestUpdate,
   User,
   NewTask,
-  Task
+  Task,
+  Categories,
+  NewCategory
 } from '../../types'
 
 import { MdAutoDelete, MdCheck, MdDelete } from 'react-icons/md'
@@ -43,6 +47,7 @@ import { useRouter } from 'next/router'
 import { IoMdEye } from 'react-icons/io'
 import Link from 'next/link'
 import SearchBar from '../../components/SearchBar'
+import UpdateCategoryModal from '../../components/UpdateCategoriesModal'
 function TaskItem({ task }: any) {
   return (
     <Box
@@ -83,7 +88,7 @@ function Index() {
 
   const deleteTask = trpc.useMutation('tasks.deleteTask')
   const updateTask = trpc.useMutation('tasks.updateTask')
-  const createTaskRequest = trpc.useMutation('tasks.createTask')
+  const createTaskRequest = trpc.useMutation('categrories.createCategory')
   const [taskRequests, setTaskRequests] = useState<any>()
   const { isOpen, onOpen, onClose } = useDisclosure()
 
@@ -113,11 +118,21 @@ function Index() {
       }
     )
   }
-  const handleCreateJuiceRequest = useCallback(
-    async (data: NewTask) => {
+  // const handleCreateJuiceRequest = useCallback(
+  //   async (data: NewTask) => {
+  //     await createTaskRequest.mutateAsync(data, {
+  //       onSuccess: () => {
+  //         utils.invalidateQueries(['tasks.getTasks'])
+  //       }
+  //     })
+  //   },
+  //   [createTaskRequest, utils]
+  // )
+  const handleCreateCategories = useCallback(
+    async (data: NewCategory) => {
       await createTaskRequest.mutateAsync(data, {
         onSuccess: () => {
-          utils.invalidateQueries(['tasks.getTasks'])
+          utils.invalidateQueries(['categrories.getCategories'])
         }
       })
     },
@@ -135,13 +150,19 @@ function Index() {
       })
     })
   }
+  
   if (!user.firstName) return <LoginForm />
   return (
     <Box maxW="container.lg">
-      <NewTaskModal
+      <UpdateCategoryModal
         isOpen={isOpen}
         onClose={onClose}
-        onSubmit={handleCreateJuiceRequest}
+        uid=""
+        category_name=""
+        category_desc=""
+        status={1}
+        handleCreateCategories={handleCreateCategories}
+        handleUpdateCategories={handleCreateCategories}
       />
 
       <HStack justify="space-between" mb={4}>
@@ -160,6 +181,72 @@ function Index() {
         setSearch={setSearch}
         placeholder="Search by name, alias, or password"
       />
+      <Table
+        bordered
+        shadow={false}
+        color="secondary"
+        aria-label="Example pagination  table"
+        css={{
+          height: 'auto',
+          minWidth: '100%'
+        }}
+        selectionMode="multiple"
+      >
+        <Table.Header>
+          <Table.Column>NAME</Table.Column>
+          <Table.Column>ROLE</Table.Column>
+          <Table.Column>STATUS</Table.Column>
+        </Table.Header>
+        <Table.Body>
+          <Table.Row key="1">
+            <Table.Cell>Tony Reichert</Table.Cell>
+            <Table.Cell>CEO</Table.Cell>
+            <Table.Cell>Active</Table.Cell>
+          </Table.Row>
+          <Table.Row key="2">
+            <Table.Cell>Zoey Lang</Table.Cell>
+            <Table.Cell>Technical Lead</Table.Cell>
+            <Table.Cell>Paused</Table.Cell>
+          </Table.Row>
+          <Table.Row key="3">
+            <Table.Cell>Jane Fisher</Table.Cell>
+            <Table.Cell>Senior Developer</Table.Cell>
+            <Table.Cell>Active</Table.Cell>
+          </Table.Row>
+          <Table.Row key="4">
+            <Table.Cell>William Howard</Table.Cell>
+            <Table.Cell>Community Manager</Table.Cell>
+            <Table.Cell>Vacation</Table.Cell>
+          </Table.Row>
+          <Table.Row key="5">
+            <Table.Cell>Jane Fisher</Table.Cell>
+            <Table.Cell>Senior Developer</Table.Cell>
+            <Table.Cell>Active</Table.Cell>
+          </Table.Row>
+          <Table.Row key="6">
+            <Table.Cell>Zoey Lang</Table.Cell>
+            <Table.Cell>Technical Lead</Table.Cell>
+            <Table.Cell>Paused</Table.Cell>
+          </Table.Row>
+          <Table.Row key="7">
+            <Table.Cell>Jane Fisher</Table.Cell>
+            <Table.Cell>Senior Developer</Table.Cell>
+            <Table.Cell>Active</Table.Cell>
+          </Table.Row>
+          <Table.Row key="8">
+            <Table.Cell>William Howard</Table.Cell>
+            <Table.Cell>Community Manager</Table.Cell>
+            <Table.Cell>Vacation</Table.Cell>
+          </Table.Row>
+        </Table.Body>
+        <Table.Pagination
+          shadow
+          noMargin
+          align="center"
+          rowsPerPage={3}
+          onPageChange={page => console.log({ page })}
+        />
+      </Table>
 
       {getTasks.data &&
         liveSearch()?.map((task: any) => {

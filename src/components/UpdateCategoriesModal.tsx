@@ -1,5 +1,3 @@
-
-
 import React, { useEffect, useState } from 'react'
 import {
   Button,
@@ -23,74 +21,70 @@ import {
   Tr,
   Td
 } from '@chakra-ui/react'
-import type { User } from '../types'
+import type { Categories, NewCategory, User } from '../types'
 
 interface Props {
-  handleUserUpdate: (data: User) => void
+  handleCreateCategories: (data: NewCategory) => void
+  handleUpdateCategories: (data: Categories) => void
   uid: string
-  firstName: string
-  lastName: string
-  alias: string
-  password: string
-  authLevel: string
+  category_name: string
+  category_desc: string
+  status: number
+
   isOpen: boolean
   onClose: () => void
 }
 
-function UpdateUserModal({
-  handleUserUpdate,
+function UpdateCategoryModal({
+  handleCreateCategories,
   uid,
-  firstName,
-  lastName,
-  alias,
-  password,
-  authLevel,
+  category_name,
+  category_desc,
+  status,
+
   isOpen,
   onClose
 }: Props) {
-  const [newFirstName, setNewFirstName] = useState(firstName)
-  const [newLastName, setNewLastName] = useState(lastName)
-  const [newAlias, setNewAlias] = useState(alias)
-  const [newPassword, setNewPassword] = useState(password)
-  const [newAuthLevel, setNewAuthLevel] = useState(authLevel)
+  const [categoryName, setNewCategoryName] = useState(category_name)
+  const [newCategoryDesc, setNewCategoryDesc] = useState(category_desc)
+  const [newStatus, setNewStatus] = useState(status)
   const [isWriting, setIsWriting] = useState(false)
+
   //   const router = useRouter()
 
   // check to see if the user has edited the form
-  useEffect(() => {
-    if (
-      newFirstName !== firstName ||
-      newLastName !== lastName ||
-      newAlias !== alias ||
-      newPassword !== password ||
-      newAuthLevel !== authLevel
-    ) {
-      setIsWriting(true)
-    }
-  }, [
-    firstName,
-    lastName,
-    alias,
-    password,
-    authLevel,
-    newFirstName,
-    newLastName,
-    newAlias,
-    newPassword,
-    newAuthLevel
-  ])
+  // useEffect(() => {
+  //   if (
+  //     newFirstName !== firstName ||
+  //     newLastName !== lastName ||
+  //     newAlias !== alias ||
+  //     newPassword !== password ||
+  //     newAuthLevel !== authLevel
+  //   ) {
+  //     setIsWriting(true)
+  //   }
+  // }, [
+  //   firstName,
+  //   lastName,
+  //   alias,
+  //   password,
+  //   authLevel,
+  //   newFirstName,
+  //   newLastName,
+  //   newAlias,
+  //   newPassword,
+  //   newAuthLevel
+  // ])
 
   const handleOptionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setNewAuthLevel(e.target.value)
+    setNewStatus(+e.target.value)
   }
 
   const handleClose = () => {
     const resetForm = () => {
-      setNewFirstName(firstName)
-      setNewLastName(lastName)
-      setNewAlias(alias)
-      setNewPassword(password)
-      setNewAuthLevel(authLevel)
+      setNewCategoryName(category_name)
+      setNewCategoryDesc(category_desc)
+      setNewStatus(status)
     }
     if (isWriting) {
       const confirmation = window.confirm(
@@ -106,14 +100,15 @@ function UpdateUserModal({
   }
 
   const onUpdate = () => {
-    handleUserUpdate({
-      id: uid,
-      firstName: newFirstName,
-      lastName: newLastName,
-      alias: newAlias,
-      password: newPassword,
-      auth: newAuthLevel
-    })
+    if (uid != '') {
+    } else {
+      handleCreateCategories({
+        category_name: categoryName,
+        category_desc: newCategoryDesc,
+        status: newStatus,
+        createdBy: '1'
+      })
+    }
     onClose()
   }
 
@@ -122,63 +117,44 @@ function UpdateUserModal({
       <Modal blockScrollOnMount={true} isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Update User</ModalHeader>
+          <ModalHeader>
+            {uid != '' ? 'Update ' : 'Create '} Categories
+          </ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <VStack spacing="25px">
               <FormControl isRequired>
-                <FormLabel as="legend">First Name</FormLabel>
+                <FormLabel as="legend">Category Name</FormLabel>
                 <Input
-                  placeholder="First Name"
+                  placeholder="Category Name"
                   variant="outline"
-                  onChange={event => setNewFirstName(event.target.value)}
-                  value={newFirstName}
-                />
-              </FormControl>
-              <FormControl isRequired>
-                <FormLabel as="legend">Last Name</FormLabel>
-                <Input
-                  placeholder="Last Name"
-                  variant="outline"
-                  onChange={event => setNewLastName(event.target.value)}
-                  value={newLastName}
+                  onChange={event => setNewCategoryName(event.target.value)}
+                  value={categoryName}
                 />
               </FormControl>
               <FormControl>
-                <FormLabel as="legend">Alias or Nickname</FormLabel>
+                <FormLabel as="legend">Category Description</FormLabel>
                 <Input
-                  placeholder="Alias"
+                  placeholder="Category Description"
                   variant="outline"
-                  onChange={event => setNewAlias(event.target.value)}
-                  value={newAlias}
+                  onChange={event => setNewCategoryDesc(event.target.value)}
+                  value={newCategoryDesc}
                 />
               </FormControl>
-              <FormControl isRequired>
-                <FormLabel as="legend">Password</FormLabel>
-                <Input
-                  placeholder="Password"
-                  variant="outline"
-                  onChange={event => setNewPassword(event.target.value)}
-                  value={newPassword}
-                />
-                <FormHelperText>
-                  Use the Unique password
-                </FormHelperText>
-              </FormControl>
+
               <FormControl isRequired as="fieldset">
-                <FormLabel as="legend">Authorization Level</FormLabel>
-                <RadioGroup value={newAuthLevel}>
+                <FormLabel as="legend">Category Status</FormLabel>
+                <RadioGroup value={newStatus.toString()}>
                   <HStack spacing="24px">
-                    <Radio value="user" onChange={handleOptionChange}>
-                      User
+                    <Radio value="1" onChange={handleOptionChange}>
+                      Active
                     </Radio>
-                  
-                    <Radio value="admin" onChange={handleOptionChange}>
-                      Admin
+
+                    <Radio value="0" onChange={handleOptionChange}>
+                      Non Active
                     </Radio>
                   </HStack>
                 </RadioGroup>
-            
               </FormControl>
             </VStack>
           </ModalBody>
@@ -187,7 +163,7 @@ function UpdateUserModal({
               Cancel
             </Button>
             <Button variant="outline" colorScheme="blue" onClick={onUpdate}>
-              Update
+              {uid != '' ? 'Update' : 'Create'}
             </Button>
           </ModalFooter>
         </ModalContent>
@@ -196,4 +172,4 @@ function UpdateUserModal({
   )
 }
 
-export default UpdateUserModal
+export default UpdateCategoryModal
