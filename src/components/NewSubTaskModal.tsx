@@ -45,7 +45,7 @@ const StyledSpanEnd = styled.div`
 
 interface Props {
   isOpen: boolean
-  UserId: string | undefined 
+  UserId: string | undefined
   TaskId: string | undefined
   onClose: () => void
   onSubmit: (data: NewSubTask) => void
@@ -87,7 +87,7 @@ export default function NewTaskModal({
     setNotes('')
   }
   const handleClose = () => {
-    const resetForm = () => {}
+    // const resetForm = () => {}
     if (isWriting) {
       const confirmation = window.confirm(
         'Are you sure you want to close this modal? All changes will be lost.'
@@ -108,7 +108,7 @@ export default function NewTaskModal({
       assignedToId:
         user.auth == 'admin' && UserId != undefined ? UserId : user.id,
       status: taskStat,
-      task_id: TaskId ==  undefined ? '':TaskId,
+      task_id: TaskId == undefined ? '' : TaskId,
       createdBy: user.id
     })
     clearForm()

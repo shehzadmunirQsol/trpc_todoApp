@@ -11,7 +11,6 @@ import superjson from 'superjson'
 import { AppProps } from 'next/app'
 import Head from 'next/head'
 
-
 const MyApp = ({ Component, pageProps, router }: AppProps) => {
   return (
     <ChakraProvider theme={theme}>

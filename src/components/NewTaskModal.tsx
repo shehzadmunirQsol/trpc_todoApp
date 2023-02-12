@@ -157,8 +157,10 @@ export default function NewTaskModal({ isOpen, onClose, onSubmit }: Props) {
                   onChange={e => setTaskAssign(e.target.value)}
                 >
                   {getUsers.data &&
-                    getUsers.data.map(val => (
-                      <option value={val.id}>{val.firstName}</option>
+                    getUsers.data.map((val, i) => (
+                      <option key={i} value={val.id}>
+                        {val.firstName}
+                      </option>
                     ))}
                 </Select>
               </FormControl>

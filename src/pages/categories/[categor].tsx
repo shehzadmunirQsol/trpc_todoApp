@@ -36,7 +36,7 @@ import { MdCheck, MdDelete } from 'react-icons/md'
 import NewSubTaskModal from '../../components/NewSubTaskModal'
 import { NewSubTask, NewTask, User } from '../../types'
 import { trpc } from '../../utils/trpc'
-import { useAuthContext } from '../../context/AuthContext'
+import { useAuthContext } from '../../context/useAuthContext'
 
 const task = () => {
   const utils = trpc.useContext()
@@ -118,7 +118,6 @@ const task = () => {
                 {getTaskById?.description}
               </Text>
             </Box>
-           
 
             <Button
               leftIcon={
@@ -130,88 +129,82 @@ const task = () => {
             >
               {getTaskById?.status}
             </Button>
-            
-            {
-              getTaskById?.status != 'Completed' &&
 
-            <Button
-              px={4}
-              leftIcon={<BiPlus />}
-              variant="outline"
-              colorScheme="white"
-              onClick={onOpen}
-              size="sm"
-              fontSize={'sm'}
-            >
-              Add Sub Task
-            </Button>}
+            {getTaskById?.status != 'Completed' && (
+              <Button
+                px={4}
+                leftIcon={<BiPlus />}
+                variant="outline"
+                colorScheme="white"
+                onClick={onOpen}
+                size="sm"
+                fontSize={'sm'}
+              >
+                Add Sub Task
+              </Button>
+            )}
           </Flex>
         </CardHeader>
 
         <CardBody>
           <Stack divider={<StackDivider />} spacing="4">
-            {(getSubTasks != undefined ) ?( 
-              getSubTasks?.data?.map((ele,i)=>(
+            {getSubTasks != undefined ? (
+              getSubTasks?.data?.map((ele, i) => (
                 <Flex
-              gap="2"
-              py={2}
-              alignItems="center"
-              justifyContent="space-between"
-            >
-              <Box w="80%">
-                <Heading size="xs" textTransform="uppercase">
-                  {ele.name}
-                </Heading>
-                <Text pt="2" fontSize="sm">
-                  {ele.description}
-                </Text>
-              </Box>
-              {ele.status !='Completed'?( <IconButton
-                variant="ghost"
-                aria-label="more information"
-                icon={<MdCheck />}
-                onClick={() => handleCheck(ele)}
-
-                size="sm"
-              />):(<Button
-                leftIcon={ <BiCheck />}
-                variant="outline"
-                colorScheme= 'green'
-                size="sm"
-              >
-                Completed
-              </Button>)}
-              <IconButton
-                variant="ghost"
-                aria-label="more information"
-                icon={<MdDelete />}
-                onClick={() => handleDelete(ele.id)}
-
-                size="sm"
-              />
-            </Flex>
+                  gap="2"
+                  py={2}
+                  alignItems="center"
+                  justifyContent="space-between"
+                >
+                  <Box w="80%">
+                    <Heading size="xs" textTransform="uppercase">
+                      {ele.name}
+                    </Heading>
+                    <Text pt="2" fontSize="sm">
+                      {ele.description}
+                    </Text>
+                  </Box>
+                  {ele.status != 'Completed' ? (
+                    <IconButton
+                      variant="ghost"
+                      aria-label="more information"
+                      icon={<MdCheck />}
+                      onClick={() => handleCheck(ele)}
+                      size="sm"
+                    />
+                  ) : (
+                    <Button
+                      leftIcon={<BiCheck />}
+                      variant="outline"
+                      colorScheme="green"
+                      size="sm"
+                    >
+                      Completed
+                    </Button>
+                  )}
+                  <IconButton
+                    variant="ghost"
+                    aria-label="more information"
+                    icon={<MdDelete />}
+                    onClick={() => handleDelete(ele.id)}
+                    size="sm"
+                  />
+                </Flex>
               ))
-              
-
-            ):(
+            ) : (
               <Flex
-              gap="2"
-              py={2}
-              alignItems="center"
-              justifyContent="space-between"
-            >
-              <Box w="80%">
-              
-                <Text pt="2" fontSize="sm">
-                 No Data found
-                </Text>
-              </Box>
-
-            </Flex>
-            ) 
-            }
-            
-
+                gap="2"
+                py={2}
+                alignItems="center"
+                justifyContent="space-between"
+              >
+                <Box w="80%">
+                  <Text pt="2" fontSize="sm">
+                    No Data found
+                  </Text>
+                </Box>
+              </Flex>
+            )}
           </Stack>
         </CardBody>
       </Card>

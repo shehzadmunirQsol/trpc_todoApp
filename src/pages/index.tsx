@@ -1,7 +1,6 @@
-
 import { useState, useCallback } from 'react'
 
-import { Button, Flex, Heading, Text,useDisclosure } from '@chakra-ui/react'
+import { Button, Flex, Heading, Text, useDisclosure } from '@chakra-ui/react'
 import type { NextPage } from 'next'
 // import { trpc } from '../utils/trpc'
 import { useAuthContext } from '../context/AuthContext' // import User state
@@ -19,7 +18,6 @@ const Home: NextPage = () => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const utils = trpc.useContext()
 
-  
   const createUser = trpc.useMutation('users.createUser')
   const handleCreateUser = useCallback(
     async (data: NewUser) => {
@@ -31,17 +29,17 @@ const Home: NextPage = () => {
     },
     [createUser, utils]
   )
-  
-  if (!user.firstName) return (
-    <>
-    <Flex justify="center" align='center' direction="column" gap={10}>
 
-    <NewUserModal
-        handleCreateUser={handleCreateUser}
-        isOpen={isOpen}
-        onClose={onClose}
-        />
-       <Button
+  if (!user.firstName)
+    return (
+      <>
+        <Flex justify="center" align="center" direction="column" gap={10}>
+          <NewUserModal
+            handleCreateUser={handleCreateUser}
+            isOpen={isOpen}
+            onClose={onClose}
+          />
+          <Button
             variant="outline"
             leftIcon={<FaUserPlus />}
             colorScheme="green"
@@ -49,10 +47,10 @@ const Home: NextPage = () => {
           >
             New User
           </Button>
-      <LoginForm />
-            </Flex>
-    </>
-  ) // if user is not logged in, return Auth component
+          <LoginForm />
+        </Flex>
+      </>
+    ) // if user is not logged in, return Auth component
 
   return (
     <>
@@ -62,9 +60,7 @@ const Home: NextPage = () => {
       <Heading size="sm" pb={2}>
         I want to say that this project is still under development.
       </Heading>
-      <Text>
-        
-      </Text>
+      <Text></Text>
     </>
   )
 }

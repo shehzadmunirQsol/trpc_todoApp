@@ -32,8 +32,29 @@ model User {
   locked    Boolean @default(false)
   Categories Categories[]
   Task      Task[]
+  Products  Products[]
 
   @@unique([firstName, lastName, password])
+}
+model Products{
+  id           String    @id @default(cuid())
+  product_name String
+  product_des  String
+  product_img  String
+  status       String
+  brand        String?
+  amount       String
+  discount     String?
+  category_id  String
+  createdBy    String
+  createdAt    DateTime  @default(now())
+  lastEdited   DateTime  @updatedAt
+  creatorId    User  @relation(fields: [createdBy], references: [id])
+  categoryId   Categories  @relation(fields: [category_id], references: [id])
+
+
+  @@unique([id])
+
 }
 
 model Task {
@@ -53,18 +74,7 @@ model Task {
 
 }
 
-view task_vw {
-  id           String    @id @default(cuid())
-  name         String
-  description  String
-  createdAt    DateTime  @default(now())
-  lastEdited   DateTime  @updatedAt
-  priority     Int
-  assignedToId String
-  createdBy    String
-  status       String
-  AsigneeName  String
-}
+
 
 
 model SubTask {
@@ -100,9 +110,11 @@ model Categories{
   category_desc  String
   status         Int
   createdBy      String    
-  createdBy1      User     @relation(fields: [createdBy], references: [id]) 
+  userRelation      User     @relation(fields: [createdBy], references: [id]) 
   created_at     DateTime @default(now())
   updated_at     DateTime @updatedAt
+  Products     Products[]
+
 
 }
 model Priority {
@@ -111,4 +123,28 @@ model Priority {
   description String
   createdAt   DateTime @default(now())
   lastEdited  DateTime @updatedAt
+}
+
+//  DATABASE VIEWS,
+view task_vw {
+  id           String    @id @default(cuid())
+  name         String
+  description  String
+  createdAt    DateTime  @default(now())
+  lastEdited   DateTime  @updatedAt
+  priority     Int
+  assignedToId String
+  createdBy    String
+  status       String
+  AsigneeName  String
+}
+view category_vw {
+  id             String   @id @default(cuid())
+  category_name  String
+  category_desc  String
+  status         Int
+  createdBy      String    
+  created_at     DateTime @default(now())
+  updated_at     DateTime @updatedAt
+  CreatorName    String
 }

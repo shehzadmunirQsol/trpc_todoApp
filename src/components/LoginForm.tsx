@@ -164,112 +164,110 @@ export default function LoginForm() {
 
   return (
     <>
-    <Flex paddingTop="1rem" direction="column" gap={10}>
-      
-      <Flex justify="center">
-        <Heading>ENTER PASSWORD</Heading>
-        <Popover
-          isOpen={isOpen}
-          onOpen={onOpen}
-          onClose={onClose}
-          placement="top-start"
-          orientation="horizontal"
+      <Flex paddingTop="1rem" direction="column" gap={10}>
+        <Flex justify="center">
+          <Heading>ENTER PASSWORD</Heading>
+          <Popover
+            isOpen={isOpen}
+            onOpen={onOpen}
+            onClose={onClose}
+            placement="top-start"
+            orientation="horizontal"
           >
-          <PopoverTrigger>
-            <IconButton
-              aria-label="input password"
-              position="relative"
-              left="3px"
-              top="5px"
-              variant="ghost"
-              size="sm"
-              icon={<InfoOutlineIcon />}
+            <PopoverTrigger>
+              <IconButton
+                aria-label="input password"
+                position="relative"
+                left="3px"
+                top="5px"
+                variant="ghost"
+                size="sm"
+                icon={<InfoOutlineIcon />}
               />
-          </PopoverTrigger>
-          <PopoverContent>
-            <PopoverHeader fontWeight="semibold">Hint</PopoverHeader>
-            <PopoverCloseButton />
-            <PopoverBody>
-              <Text alignItems="center">
-                Use the same password you were given to access Toast
-                <Image
-                  display="inline"
-                  position="relative"
-                  top="3px"
-                  borderRadius="full"
-                  boxSize="15px"
-                  src="/toast_favicon.png"
-                  alt="Toast Logo"
-                />
-              </Text>
-            </PopoverBody>
-            <PopoverFooter>
-              <Text>{"If your password doesn't work, let me know. 🙏"}</Text>
-              <Text float="right">- Jeremy</Text>
-            </PopoverFooter>
-          </PopoverContent>
-        </Popover>
-      </Flex>
-      <HStack justifyContent="center">
-        <Input
-          maxW="45px"
-          maxLength={1}
-          size="lg"
-          pattern="\d*" // only allow numbers
-          as="input"
-          ref={firstPinInput}
-          value={firstPin}
-          onKeyDown={handleKeyDown}
-          onFocus={() => handleFocus(password)}
-          onChange={e => setFirstPin(e.target.value)}
+            </PopoverTrigger>
+            <PopoverContent>
+              <PopoverHeader fontWeight="semibold">Hint</PopoverHeader>
+              <PopoverCloseButton />
+              <PopoverBody>
+                <Text alignItems="center">
+                  Use the same password you were given to access Toast
+                  <Image
+                    display="inline"
+                    position="relative"
+                    top="3px"
+                    borderRadius="full"
+                    boxSize="15px"
+                    src="/toast_favicon.png"
+                    alt="Toast Logo"
+                  />
+                </Text>
+              </PopoverBody>
+              <PopoverFooter>
+                <Text>{"If your password doesn't work, let me know. 🙏"}</Text>
+                <Text float="right">- Jeremy</Text>
+              </PopoverFooter>
+            </PopoverContent>
+          </Popover>
+        </Flex>
+        <HStack justifyContent="center">
+          <Input
+            maxW="45px"
+            maxLength={1}
+            size="lg"
+            pattern="\d*" // only allow numbers
+            as="input"
+            ref={firstPinInput}
+            value={firstPin}
+            onKeyDown={handleKeyDown}
+            onFocus={() => handleFocus(password)}
+            onChange={e => setFirstPin(e.target.value)}
           />
-        <Input
-          pattern="\d*" // only allow numbers
-          maxW="45px"
-          size="lg"
-          maxLength={1}
-          ref={secondPinInput}
-          value={secondPin}
-          onKeyDown={handleKeyDown}
-          onFocus={() => handleFocus(password)}
-          onChange={e => setSecondPin(e.target.value)}
+          <Input
+            pattern="\d*" // only allow numbers
+            maxW="45px"
+            size="lg"
+            maxLength={1}
+            ref={secondPinInput}
+            value={secondPin}
+            onKeyDown={handleKeyDown}
+            onFocus={() => handleFocus(password)}
+            onChange={e => setSecondPin(e.target.value)}
           />
-        <Input
-          pattern="\d*" // only allow numbers
-          maxW="45px"
-          size="lg"
-          maxLength={1}
-          ref={thirdPinInput}
-          value={thirdPin}
-          onKeyDown={handleKeyDown}
-          onFocus={() => handleFocus(password)}
-          onChange={e => setThirdPin(e.target.value)}
+          <Input
+            pattern="\d*" // only allow numbers
+            maxW="45px"
+            size="lg"
+            maxLength={1}
+            ref={thirdPinInput}
+            value={thirdPin}
+            onKeyDown={handleKeyDown}
+            onFocus={() => handleFocus(password)}
+            onChange={e => setThirdPin(e.target.value)}
           />
-        <Input
-          pattern="\d*" // only allow numbers
-          maxW="45px"
-          size="lg"
-          maxLength={1}
-          ref={fourthPinInput}
-          value={fourthPin}
-          onKeyDown={handleKeyDown}
-          onFocus={() => handleFocus(password)}
-          onChange={e => setFourthPin(e.target.value)}
+          <Input
+            pattern="\d*" // only allow numbers
+            maxW="45px"
+            size="lg"
+            maxLength={1}
+            ref={fourthPinInput}
+            value={fourthPin}
+            onKeyDown={handleKeyDown}
+            onFocus={() => handleFocus(password)}
+            onChange={e => setFourthPin(e.target.value)}
           />
-      </HStack>
-      <Flex justify="center" align='center' direction="column" gap={10}>
-        <Button
-          as={Button}
-          size="lg"
-          rightIcon={<ArrowRightIcon />}
-          width="6rem"
-          onClick={() => handleSubmit(password)}
+        </HStack>
+        <Flex justify="center" align="center" direction="column" gap={10}>
+          <Button
+            as={Button}
+            size="lg"
+            rightIcon={<ArrowRightIcon />}
+            width="6rem"
+            onClick={() => handleSubmit(password)}
           >
-          GO
-        </Button>
-     
+            GO
+          </Button>
+        </Flex>
       </Flex>
-    </Flex>
     </>
   )
 }

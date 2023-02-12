@@ -30,6 +30,8 @@ export interface Categories {
   category_desc: string
   status: number
   createdBy: string
+  created_at: string
+  updated_on: string
 }
 export interface NewCategory {
   category_name: string

@@ -1,5 +1,3 @@
-
-
 import { useState, useCallback } from 'react'
 import { trpc } from '../../utils/trpc'
 import {
@@ -149,23 +147,22 @@ export default function Index() {
           setSearch={setSearch}
           placeholder="Search by name, alias, or password"
         />
-       <SimpleGrid columns={2} spacing={10}>
-        {getUsers.data &&
-          liveSearch()?.map((user: any) => (
-            <UserCard
-              key={user.id}
-              handleUserDelete={handleUserDelete}
-              handleUserUpdate={handleUserUpdate}
-              uid={user.id}
-              firstName={user.firstName}
-              lastName={user.lastName}
-              alias={user.alias}
-              password={user.password}
-              auth={user.auth}
+        <SimpleGrid columns={2} spacing={10}>
+          {getUsers.data &&
+            liveSearch()?.map((user: any) => (
+              <UserCard
+                key={user.id}
+                handleUserDelete={handleUserDelete}
+                handleUserUpdate={handleUserUpdate}
+                uid={user.id}
+                firstName={user.firstName}
+                lastName={user.lastName}
+                alias={user.alias}
+                password={user.password}
+                auth={user.auth}
               />
-              ))}
-          
-              </SimpleGrid>
+            ))}
+        </SimpleGrid>
       </Stack>
     </>
   )

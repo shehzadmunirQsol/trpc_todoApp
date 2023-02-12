@@ -1,4 +1,3 @@
-export default Index
 import React, { useCallback, useEffect, useState } from 'react'
 import LoginForm from '../../components/LoginForm'
 import { useAuthContext } from '../../context/AuthContext'
@@ -44,8 +43,6 @@ import { IoMdEye } from 'react-icons/io'
 import Link from 'next/link'
 import SearchBar from '../../components/SearchBar'
 function TaskItem({ task }: any) {
-
-
   return (
     <Box
       flex="1"
@@ -54,12 +51,12 @@ function TaskItem({ task }: any) {
       justifyContent="space-between"
     >
       <Flex gap="2" py={2} alignItems="center" justifyContent="space-between">
-        <Text>{task.name}</Text>
+        <Text>{task?.name}</Text>
 
-        {task.assignedToId == task.createdBy ? (
+        {task?.assignedToId == task?.createdBy ? (
           <Text fontSize={14}>Assign To : You</Text>
         ) : (
-          <Text fontSize={14}>Assign To : ({task.AsigneeName})</Text>
+          <Text fontSize={14}>Assign To : ({task?.AsigneeName})</Text>
         )}
       </Flex>
     </Box>
@@ -127,17 +124,13 @@ function Index() {
   )
 
   const liveSearch = () => {
-    return taskRequests?.filter((data:any) => {
+    return taskRequests?.filter((data: any) => {
       const name = data.name.toLowerCase()
       const description = data.description.toLowerCase()
 
       const searchWords = search.toLowerCase().split(' ')
       return searchWords.every(word => {
-        return (
-          name.includes(word) ||
-          description.includes(word)
-      
-        )
+        return name.includes(word) || description.includes(word)
       })
     })
   }
@@ -162,17 +155,17 @@ function Index() {
         </Button>
       </HStack>
       <SearchBar
-          search={search}
-          setSearch={setSearch}
-          placeholder="Search by name, alias, or password"
-        />
+        search={search}
+        setSearch={setSearch}
+        placeholder="Search by name, alias, or password"
+      />
 
       {getTasks.data &&
-        liveSearch()?.map((task:any) => {
+        liveSearch()?.map((task: any) => {
           return (
             <>
               <Flex
-                key={task.id}
+                key={task?.id}
                 gap="2"
                 py={2}
                 alignItems="center"
@@ -194,8 +187,8 @@ function Index() {
                   <PopoverContent>
                     <PopoverArrow />
                     <PopoverCloseButton />
-                    <PopoverHeader>{task.name}</PopoverHeader>
-                    <PopoverBody>{task.description}</PopoverBody>
+                    <PopoverHeader>{task?.name}</PopoverHeader>
+                    <PopoverBody>{task?.description}</PopoverBody>
                   </PopoverContent>
                 </Popover>
                 {task.status != 'Completed' && (
@@ -207,17 +200,18 @@ function Index() {
                     size="sm"
                   />
                 )}
-                {user.auth == 'admin' || task.createdBy == user.id ? (
-
+                {user.auth == 'admin' || task?.createdBy == user.id ? (
                   <IconButton
-                  variant="ghost"
-                  aria-label="more information"
-                  icon={<MdDelete />}
-                  size="sm"
-                  onClick={() => handleDelete(task.id)}
+                    variant="ghost"
+                    aria-label="more information"
+                    icon={<MdDelete />}
+                    size="sm"
+                    onClick={() => handleDelete(task.id)}
                   />
-                ):(<></>)}
-                {user.auth == 'admin' && task.status != 'Completed' ? (
+                ) : (
+                  <></>
+                )}
+                {user.auth == 'admin' && task?.status != 'Completed' ? (
                   <>
                     <Link href={`/tasks/${task.id}`}>
                       <IconButton
@@ -229,7 +223,7 @@ function Index() {
                     </Link>
                   </>
                 ) : (
-                  <Link href={`/tasks/${task.id}`}>
+                  <Link href={`/tasks/${task?.id}`}>
                     <IconButton
                       variant="ghost"
                       aria-label="more information"
@@ -246,3 +240,4 @@ function Index() {
     </Box>
   )
 }
+export default Index

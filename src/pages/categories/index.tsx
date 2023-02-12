@@ -1,46 +1,25 @@
 export default Index
 import React, { useCallback, useEffect, useState } from 'react'
-import { Table, useAsyncList } from '@nextui-org/react'
-
 import LoginForm from '../../components/LoginForm'
 import { useAuthContext } from '../../context/AuthContext'
 import { trpc } from '../../utils/trpc'
 import {
   Text,
-  Select,
   Box,
   Heading,
   Flex,
-  Checkbox,
-  IconButton,
-  Divider,
   HStack,
   Button,
   useDisclosure,
   useColorModeValue,
-  Alert,
-  Popover,
-  PopoverTrigger,
-  PopoverContent,
-  PopoverArrow,
-  PopoverCloseButton,
-  PopoverHeader,
-  PopoverBody
+  Input
 } from '@chakra-ui/react'
 import { AddIcon } from '@chakra-ui/icons'
 import NewTaskModal from '../../components/NewTaskModal'
 import { BiMessageRoundedAdd, BiPlus } from 'react-icons/bi'
+import DataTable, { createTheme } from 'react-data-table-component'
 
-import type {
-  JuiceRequest,
-  NewJuiceRequest,
-  JuiceRequestUpdate,
-  User,
-  NewTask,
-  Task,
-  Categories,
-  NewCategory
-} from '../../types'
+import type { NewCategory } from '../../types'
 
 import { MdAutoDelete, MdCheck, MdDelete } from 'react-icons/md'
 import { useRouter } from 'next/router'
@@ -48,7 +27,37 @@ import { IoMdEye } from 'react-icons/io'
 import Link from 'next/link'
 import SearchBar from '../../components/SearchBar'
 import UpdateCategoryModal from '../../components/UpdateCategoriesModal'
-function TaskItem({ task }: any) {
+createTheme(
+  'solarized',
+  {
+    text: {
+      primary: '#268bd2',
+      secondary: '#2aa198'
+    },
+    background: {
+      default: '#002b36'
+    },
+    context: {
+      background: '#cb4b16',
+      text: '#FFFFFF'
+    },
+    divider: {
+      default: '#073642'
+    },
+    action: {
+      button: 'rgba(0,0,0,.54)',
+      hover: 'rgba(0,0,0,.08)',
+      disabled: 'rgba(0,0,0,.12)'
+    }
+  },
+  'dark'
+)
+// createTheme('dark', {
+//   background: {
+//     default: 'transparent'
+//   }
+// })
+function CategoryItem({ task }: any) {
   return (
     <Box
       flex="1"
@@ -73,14 +82,7 @@ function Index() {
   const { user } = useAuthContext()
   const path = useRouter()
   const data = path.query.data?.toString()
-  const getTasks = trpc.useQuery([
-    'tasks.getTasks',
-    {
-      assignedToId: user.id,
-      status: data ? data : 'pending',
-      user_auth: user.auth
-    }
-  ])
+  const getCategories = trpc.useQuery(['categrories.getCategories'])
   const getUsers = trpc.useQuery(['users.getUsers'])
   const [search, setSearch] = useState<string>('')
   const HandleColorModeChange = useColorModeValue('gray.600', 'gray.400')
@@ -94,9 +96,9 @@ function Index() {
 
   // this updates the UI when the userQuery data is first loaded.
   useEffect(() => {
-    if (getTasks.isFetching) setTaskRequests(undefined)
-    if (getTasks.isFetched) setTaskRequests(getTasks?.data)
-  }, [getTasks.data, getTasks.isFetched, getTasks.isFetching])
+    if (getCategories.isFetching) setTaskRequests(undefined)
+    if (getCategories.isFetched) setTaskRequests(getCategories?.data)
+  }, [getCategories.data, getCategories.isFetched, getCategories.isFetching])
 
   const handleCheck = async (task: any) => {
     await updateTask.mutateAsync(
@@ -150,7 +152,75 @@ function Index() {
       })
     })
   }
-  
+
+  const columns = [
+    {
+      name: 'Category Name',
+      selector: (row: any) => row?.category_name
+    },
+    {
+      name: 'Category Description',
+      selector: (row: any) => row?.category_desc
+    },
+    {
+      name: 'Status',
+      selector: (row: any) => row?.status
+    },
+    {
+      name: 'Created By',
+      selector: (row: any) => row?.createdBy
+    },
+    {
+      name: 'Created On',
+      selector: (row: any) => row?.created_
+    }
+  ]
+
+  const rowData = [
+    {
+      id: 1,
+      title: 'Beetlejuice',
+      year: '1988'
+    },
+    {
+      id: 2,
+      title: 'Ghostbusters',
+      year: '1984'
+    }
+  ]
+  const [filterText, setFilterText] = React.useState('')
+  const [resetPaginationToggle, setResetPaginationToggle] =
+    React.useState(false)
+  const filteredItems = getCategories?.data?.filter(
+    item =>
+      item?.category_name &&
+      item?.category_name.toLowerCase().includes(filterText.toLowerCase())
+  )
+
+  const subHeaderComponentMemo = React.useMemo(() => {
+    const handleClear = () => {
+      if (filterText) {
+        setResetPaginationToggle(!resetPaginationToggle)
+        setFilterText('')
+      }
+    }
+
+    return (
+      <Input
+        type="text"
+        onChange={e => setFilterText(e.target.value)}
+        w={'150px'}
+        color={'black'}
+        placeholder="Search"
+        _placeholder={{ color: 'black' }}
+        border="1px"
+        borderColor="gray.200"
+        // onClear={handleClear}
+        value={filterText}
+      />
+    )
+  }, [filterText, resetPaginationToggle])
+
   if (!user.firstName) return <LoginForm />
   return (
     <Box maxW="container.lg">
@@ -181,74 +251,31 @@ function Index() {
         setSearch={setSearch}
         placeholder="Search by name, alias, or password"
       />
-      <Table
-        bordered
-        shadow={false}
-        color="secondary"
-        aria-label="Example pagination  table"
-        css={{
-          height: 'auto',
-          minWidth: '100%'
-        }}
-        selectionMode="multiple"
-      >
-        <Table.Header>
-          <Table.Column>NAME</Table.Column>
-          <Table.Column>ROLE</Table.Column>
-          <Table.Column>STATUS</Table.Column>
-        </Table.Header>
-        <Table.Body>
-          <Table.Row key="1">
-            <Table.Cell>Tony Reichert</Table.Cell>
-            <Table.Cell>CEO</Table.Cell>
-            <Table.Cell>Active</Table.Cell>
-          </Table.Row>
-          <Table.Row key="2">
-            <Table.Cell>Zoey Lang</Table.Cell>
-            <Table.Cell>Technical Lead</Table.Cell>
-            <Table.Cell>Paused</Table.Cell>
-          </Table.Row>
-          <Table.Row key="3">
-            <Table.Cell>Jane Fisher</Table.Cell>
-            <Table.Cell>Senior Developer</Table.Cell>
-            <Table.Cell>Active</Table.Cell>
-          </Table.Row>
-          <Table.Row key="4">
-            <Table.Cell>William Howard</Table.Cell>
-            <Table.Cell>Community Manager</Table.Cell>
-            <Table.Cell>Vacation</Table.Cell>
-          </Table.Row>
-          <Table.Row key="5">
-            <Table.Cell>Jane Fisher</Table.Cell>
-            <Table.Cell>Senior Developer</Table.Cell>
-            <Table.Cell>Active</Table.Cell>
-          </Table.Row>
-          <Table.Row key="6">
-            <Table.Cell>Zoey Lang</Table.Cell>
-            <Table.Cell>Technical Lead</Table.Cell>
-            <Table.Cell>Paused</Table.Cell>
-          </Table.Row>
-          <Table.Row key="7">
-            <Table.Cell>Jane Fisher</Table.Cell>
-            <Table.Cell>Senior Developer</Table.Cell>
-            <Table.Cell>Active</Table.Cell>
-          </Table.Row>
-          <Table.Row key="8">
-            <Table.Cell>William Howard</Table.Cell>
-            <Table.Cell>Community Manager</Table.Cell>
-            <Table.Cell>Vacation</Table.Cell>
-          </Table.Row>
-        </Table.Body>
-        <Table.Pagination
-          shadow
-          noMargin
-          align="center"
-          rowsPerPage={3}
-          onPageChange={page => console.log({ page })}
-        />
-      </Table>
 
-      {getTasks.data &&
+      {/* <KitchenSinkStory
+        direction="auto"
+        fixedHeaderScrollHeight="300px"
+        pagination
+        responsive
+        subHeaderAlign="right"
+        subHeaderWrap
+      /> */}
+      <DataTable
+        // style={{ borderRadius: '25px' }}
+        title="Categories"
+        columns={columns}
+        theme="solarized"
+        data={filteredItems || []}
+        pagination
+        dense
+        selectableRows
+        paginationResetDefaultPage={resetPaginationToggle} // optionally, a hook to reset pagination to page 1
+        subHeader
+        subHeaderComponent={subHeaderComponentMemo}
+        persistTableHead
+      />
+
+      {/* {getCategories.data &&
         liveSearch()?.map((task: any) => {
           return (
             <>
@@ -274,7 +301,7 @@ function Index() {
               <Divider />
             </>
           )
-        })}
+        })} */}
     </Box>
   )
 }
