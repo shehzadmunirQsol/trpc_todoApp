@@ -41,10 +41,11 @@ model Products{
   product_name String
   product_des  String
   product_img  String
-  status       String
+  status       Int
   brand        String?
-  amount       String
-  discount     String?
+  amount       Int
+  discount     Int?
+  qty          Int
   category_id  String
   createdBy    String
   createdAt    DateTime  @default(now())
@@ -117,13 +118,7 @@ model Categories{
 
 
 }
-model Priority {
-  id          String   @id @default(cuid())
-  name        String
-  description String
-  createdAt   DateTime @default(now())
-  lastEdited  DateTime @updatedAt
-}
+
 
 //  DATABASE VIEWS,
 view task_vw {

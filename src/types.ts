@@ -30,12 +30,32 @@ export interface Categories {
   category_desc: string
   status: number
   createdBy: string
-  created_at: string
-  updated_on: string
 }
+
 export interface NewCategory {
   category_name: string
   category_desc: string
+  status: number
+  createdBy: string
+}
+export interface Products {
+  id: string
+  product_name: string
+  product_desc: string
+  product_img: object
+  category_id: string
+  product_amount: number
+  product_qty: number
+  status: number
+  createdBy: string
+}
+export interface NewProducts {
+  product_name: string
+  product_des: string
+  product_img: string
+  category_id: string
+  amount: number
+  qty: number
   status: number
   createdBy: string
 }

@@ -93,7 +93,7 @@ export default function NewTaskModal({
         'Are you sure you want to close this modal? All changes will be lost.'
       )
       if (confirmation) {
-        resetForm()
+        // resetForm()
         onClose()
       }
     } else {

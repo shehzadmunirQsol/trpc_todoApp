@@ -37,11 +37,11 @@ interface Props {
 
 function UpdateCategoryModal({
   handleCreateCategories,
+  handleUpdateCategories,
   uid,
   category_name,
   category_desc,
   status,
-
   isOpen,
   onClose
 }: Props) {
@@ -49,32 +49,15 @@ function UpdateCategoryModal({
   const [newCategoryDesc, setNewCategoryDesc] = useState(category_desc)
   const [newStatus, setNewStatus] = useState(status)
   const [isWriting, setIsWriting] = useState(false)
-
+  console.log(categoryName, 'category_name')
   //   const router = useRouter()
 
   // check to see if the user has edited the form
-  // useEffect(() => {
-  //   if (
-  //     newFirstName !== firstName ||
-  //     newLastName !== lastName ||
-  //     newAlias !== alias ||
-  //     newPassword !== password ||
-  //     newAuthLevel !== authLevel
-  //   ) {
-  //     setIsWriting(true)
-  //   }
-  // }, [
-  //   firstName,
-  //   lastName,
-  //   alias,
-  //   password,
-  //   authLevel,
-  //   newFirstName,
-  //   newLastName,
-  //   newAlias,
-  //   newPassword,
-  //   newAuthLevel
-  // ])
+  useEffect(() => {
+    setNewCategoryName(category_name)
+    setNewCategoryDesc(category_desc)
+    setNewStatus(status)
+  }, [uid, category_name, category_desc, status])
 
   const handleOptionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setNewStatus(+e.target.value)
@@ -100,9 +83,16 @@ function UpdateCategoryModal({
   }
 
   const onUpdate = () => {
-    if (uid != '') {
-    } else {
+    if (uid === '' || uid === undefined) {
       handleCreateCategories({
+        category_name: categoryName,
+        category_desc: newCategoryDesc,
+        status: newStatus,
+        createdBy: '1'
+      })
+    } else {
+      handleUpdateCategories({
+        id: uid,
         category_name: categoryName,
         category_desc: newCategoryDesc,
         status: newStatus,

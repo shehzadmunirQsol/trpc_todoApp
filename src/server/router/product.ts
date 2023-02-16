@@ -4,13 +4,13 @@ import { z } from 'zod'
 
 
 
-export const categoriesRouter = createRouter()
-  .query("getCategories", {
+export const productsRouter = createRouter()
+  .query("getProducts", {
     async resolve({ ctx }) {
       return await ctx.prisma.category_vw.findMany();
     }
   })
-  .mutation("deleteCategories", {
+  .mutation("deleteProduct", {
     input: z.object({
       id: z.string(),
     }),
@@ -23,26 +23,35 @@ export const categoriesRouter = createRouter()
     )
   }
   })
-  .mutation("createCategory", {
+  .mutation("createProduct", {
     // validate input with Zod
     input: z.object({ 
-      category_name: z.string(), 
-      category_desc: z.string(), 
-      status: z.number(), 
-      createdBy: z.string(), 
+      product_name: z.string(), 
+      product_des: z.string(), 
+      product_img: z.string(), 
+      status: z.number(),
+      amount: z.number(),
+      qty: z.number(),
+      category_id: z.string(),
+      createdBy: z.string(),
+
     }),
     async resolve({ ctx, input }) {
-      await ctx.prisma.categories.create({
+      await ctx.prisma.products.create({
         data: {
-          category_name: input.category_name,
-          category_desc: input.category_desc,
+              product_name: input.product_name, 
+      product_des: input.product_des, 
+      product_img: input.product_img, 
+      amount: input.amount,
+      qty: input.qty,
+      category_id: input.category_id,
           status: input.status,
           createdBy: input.createdBy,
         },
       })    
     }
   })
-  .mutation("updateCategory", {
+  .mutation("updateProduct", {
     input: z.object({
       id: z.string(),
      category_name: z.string(), 
@@ -66,7 +75,7 @@ export const categoriesRouter = createRouter()
       return user
     }
   })
-   .mutation("updateCategoryStatus", {
+   .mutation("updateProductStatus", {
     input: z.object({
       id: z.string(),  
       status: z.number(),  

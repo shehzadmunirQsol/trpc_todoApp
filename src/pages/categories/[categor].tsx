@@ -36,7 +36,7 @@ import { MdCheck, MdDelete } from 'react-icons/md'
 import NewSubTaskModal from '../../components/NewSubTaskModal'
 import { NewSubTask, NewTask, User } from '../../types'
 import { trpc } from '../../utils/trpc'
-import { useAuthContext } from '../../context/useAuthContext'
+import { useAuthContext } from '../../context/AuthContext'
 
 const task = () => {
   const utils = trpc.useContext()
@@ -151,6 +151,7 @@ const task = () => {
             {getSubTasks != undefined ? (
               getSubTasks?.data?.map((ele, i) => (
                 <Flex
+                  key={i}
                   gap="2"
                   py={2}
                   alignItems="center"
